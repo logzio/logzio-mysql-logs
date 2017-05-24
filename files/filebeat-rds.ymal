@@ -1,0 +1,62 @@
+filebeat:
+  prospectors:
+    -
+      paths:
+        - "${MYSQL_ERROR_LOG_FILE}*"
+      fields:
+        logzio_codec: plain
+        token: ${LOGZIO_TOKEN}
+        rds_identifier: ${RDS_IDENTIFIER}
+      fields_under_root: true
+      ignore_older: 3h
+      tail_files: true
+      document_type: mysql_error
+    -
+      paths:
+       - "${MYSQL_SLOW_LOG_FILE}*"
+      fields:
+        logzio_codec: plain
+        token: ${LOGZIO_TOKEN}
+        rds_identifier: ${RDS_IDENTIFIER}
+      fields_under_root: true
+      ignore_older: 3h
+      tail_files: true
+      document_type: mysql_slow_query
+      multiline:
+        pattern: '^# Time:'
+        negate: true
+        match: after
+    -
+      paths:
+       - "${MYSQL_LOG_FILE}*"
+      fields:
+        logzio_codec: plain
+        token: ${LOGZIO_TOKEN}
+        rds_identifier: ${RDS_IDENTIFIER}
+      fields_under_root: true
+      ignore_older: 3h
+      tail_files: true
+      document_type: mysql
+      multiline:
+        pattern: '^[[:space:]]'
+        negate: false
+        match: after
+  registry_file: /var/log/logzio/registry
+output:
+  logstash:
+    hosts: ["${LOGZIO_LISTENER}:5015"]
+    #  The below configuration is used for Filebeat 1.3 or lower
+    tls:
+      certificate_authorities: ['/etc/pki/tls/certs/COMODORSADomainValidationSecureServerCA.crt']
+      
+    #  The below configuration is used for Filebeat 5.0 or higher      
+    ssl:
+      certificate_authorities: ['/etc/pki/tls/certs/COMODORSADomainValidationSecureServerCA.crt']
+logging:
+  to_files: true
+  files:
+    path: /var/log/logzio/
+    name: filebeat.log
+    rotateeverybytes: 10485760
+    keepfiles: 2
+  level: warning
