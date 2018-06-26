@@ -39,11 +39,10 @@ if ! [[ -z $AWS_ACCESS_KEY && -z $AWS_SECRET_KEY ]]; then
 fi
 
 # print the env vars
-env 
+env
 
-# run and monitor MySQL logs
+# run and monitor PostgreSQL logs
 run
 
 # stop service
 cleanup
-

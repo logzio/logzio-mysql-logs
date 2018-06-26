@@ -2,7 +2,7 @@ filebeat:
   prospectors:
     -
       paths:
-        - "${MYSQL_ERROR_LOG_FILE}*"
+        - "${POSTGRESQL_ERROR_LOG_FILE}*"
       fields:
         logzio_codec: plain
         token: ${LOGZIO_TOKEN}
@@ -10,10 +10,10 @@ filebeat:
       fields_under_root: true
       ignore_older: 3h
       tail_files: true
-      document_type: mysql_error
+      document_type: postgresql_error
     -
       paths:
-       - "${MYSQL_SLOW_LOG_FILE}*"
+       - "${POSTGRESQL_SLOW_LOG_FILE}*"
       fields:
         logzio_codec: plain
         token: ${LOGZIO_TOKEN}
@@ -21,14 +21,14 @@ filebeat:
       fields_under_root: true
       ignore_older: 3h
       tail_files: true
-      document_type: mysql_slow_query
+      document_type: postgresql_slow_query
       multiline:
         pattern: '^# Time:'
         negate: true
         match: after
     -
       paths:
-       - "${MYSQL_LOG_FILE}*"
+       - "${POSTGRESQL_LOG_FILE}*"
       fields:
         logzio_codec: plain
         token: ${LOGZIO_TOKEN}
@@ -36,7 +36,7 @@ filebeat:
       fields_under_root: true
       ignore_older: 3h
       tail_files: true
-      document_type: mysql
+      document_type: postgresql
       multiline:
         pattern: '^[[:space:]]'
         negate: false
@@ -48,8 +48,8 @@ output:
     #  The below configuration is used for Filebeat 1.3 or lower
     tls:
       certificate_authorities: ['/etc/pki/tls/certs/COMODORSADomainValidationSecureServerCA.crt']
-      
-    #  The below configuration is used for Filebeat 5.0 or higher      
+
+    #  The below configuration is used for Filebeat 5.0 or higher
     ssl:
       certificate_authorities: ['/etc/pki/tls/certs/COMODORSADomainValidationSecureServerCA.crt']
 logging:
