@@ -6,7 +6,7 @@
 : ${MYSQL_USER:=""}
 : ${MYSQL_PASS:=""}
 
-# running checks interval, default to 60 seconds 
+# running checks interval, default to 60 seconds
 : ${INTERVAL_SECONDS:=60}
 
 # logging level (debug, info and error), default to info
@@ -38,7 +38,7 @@ fi
 # Setup dependencies
 source ./utils.sh
 
-# ---------------------------------------- 
+# ----------------------------------------
 # useage
 # ----------------------------------------
 function usage {
@@ -47,7 +47,7 @@ function usage {
 	echo docker run -d --name logzio-mysql-logs -e LOGZIO_TOKEN=VALUE [-e LOGZIO_LISTENER=VALUE] \
                     [-e MYSQL_ERROR_LOG_FILE=VALUE] [-e MYSQL_SLOW_LOG_FILE=VALUE] [-e MYSQL_LOG_FILE=VALUE] \
                     -v path_to_directory:/var/log/logzio -v path_to_directory:/var/log/mysql \
-                    logzio/mysql-logs:latest 
+                    logzio/mysql-logs:latest
 	echo
     echo
     echo "RDS Usage:"
@@ -55,14 +55,14 @@ function usage {
                     -e AWS_ACCESS_KEY=VALUE -e AWS_SECRET_KEY=VALUE -e AWS_REGION=VALUE -e RDS_IDENTIFIER=VALUE \
                     [-e RDS_ERROR_LOG_FILE=VALUE] [-e RDS_SLOW_LOG_FILE=VALUE] [-e RDS_LOG_FILE=VALUE] \
                     -v path_to_directory:/var/log/logzio -v path_to_directory:/var/log/mysql \
-                    logzio/mysql-logs:latest 
-    echo 
+                    logzio/mysql-logs:latest
+    echo
     exit $1
 }
 
-# ---------------------------------------- 
+# ----------------------------------------
 # script arguments
-# ---------------------------------------- 
+# ----------------------------------------
 function parse_arguments {
     while :; do
         case $1 in
@@ -88,16 +88,18 @@ function parse_arguments {
 }
 
 
-# ---------------------------------------- 
+# ----------------------------------------
 # start watching rds log files and write it
 # to files so rsyslog can monitor then
-# ---------------------------------------- 
+# ----------------------------------------
 function configure_rds() {
     mkdir -p /root/.aws
     echo "[default]" > $AWS_CREDENTIAL_FILE
     echo "region = $AWS_REGION" >> $AWS_CREDENTIAL_FILE
-    echo "aws_secret_access_key = $AWS_SECRET_KEY" >> $AWS_CREDENTIAL_FILE
-    echo "aws_access_key_id = $AWS_ACCESS_KEY" >> $AWS_CREDENTIAL_FILE
+    if [[ ! -z $AWS_SECRET_KEY ]]; then
+      echo "aws_secret_access_key = $AWS_SECRET_KEY" >> $AWS_CREDENTIAL_FILE
+      echo "aws_access_key_id = $AWS_ACCESS_KEY" >> $AWS_CREDENTIAL_FILE
+    fi
 
     # if the describe log file fails, we will exit with error (and log it)
     execute aws rds describe-db-log-files --db-instance-identifier $RDS_IDENTIFIER
@@ -124,17 +126,17 @@ function configure_rds() {
     log "INFO" "Monitor RDS files: $monitoring"
 }
 
-# ---------------------------------------- 
+# ----------------------------------------
 # Sync RDS log files
-# ---------------------------------------- 
+# ----------------------------------------
 function sync_rds() {
     # if the user configured the rds general log file ... sync it
     if [[ ! -z $RDS_LOG_FILE ]]; then
         aws rds download-db-log-file-portion --db-instance-identifier $RDS_IDENTIFIER --output text --log-file-name $RDS_LOG_FILE > /tmp/mysql.log 2>> $ERROR_LOG_FILE
-        
+
         HOUR=$(date +%Y-%m-%d-%H)
         HOURLY_MYSQL_LOG_FILE="$MYSQL_LOG_FILE-$HOUR"
-        
+
         diff $HOURLY_MYSQL_LOG_FILE /tmp/mysql.log | grep '>' | cut -c 3- >> $HOURLY_MYSQL_LOG_FILE
     fi
 
@@ -144,7 +146,7 @@ function sync_rds() {
 
         HOUR=$(date +%Y-%m-%d-%H)
         HOURLY_MYSQL_SLOW_LOG_FILE="$MYSQL_SLOW_LOG_FILE-$HOUR"
-        
+
         diff $HOURLY_MYSQL_SLOW_LOG_FILE /tmp/mysql-slow.log | grep '>' | cut -c 3- >> $HOURLY_MYSQL_SLOW_LOG_FILE
     fi
 
@@ -163,9 +165,9 @@ function sync_rds() {
 }
 
 
-# ---------------------------------------- 
-# Restart Filebeat 
-# ---------------------------------------- 
+# ----------------------------------------
+# Restart Filebeat
+# ----------------------------------------
 function restart_filebeat() {
     log "INFO" "MYSQL_ERROR_LOG_FILE: $MYSQL_ERROR_LOG_FILE"
     log "INFO" "MYSQL_SLOW_LOG_FILE: $MYSQL_SLOW_LOG_FILE"
@@ -176,9 +178,9 @@ function restart_filebeat() {
     execute /etc/init.d/filebeat start
 }
 
-# ---------------------------------------- 
-# Run 
-# ---------------------------------------- 
+# ----------------------------------------
+# Run
+# ----------------------------------------
 function run() {
     # start file beat
     restart_filebeat
@@ -189,7 +191,7 @@ function run() {
     while true; do
         if [[ -f $PID_FILE ]]; then
             log "DEBUG" "PID File exist .... "
-        
+
             sleep $INTERVAL_SECONDS
         else
             log "DEBUG" "Running .... "
@@ -201,12 +203,10 @@ function run() {
                 # sync rds lo files
                 sync_rds
             fi
-    
+
             sleep $INTERVAL_SECONDS
 
             execute rm -f $PID_FILE
         fi
     done
 }
-
-

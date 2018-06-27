@@ -21,7 +21,7 @@ if [[ -z $LOGZIO_TOKEN ]]; then
     exit 1
 fi
 
-if ! [[ -z $AWS_ACCESS_KEY && -z $AWS_SECRET_KEY ]]; then
+if ! [[ -z $RDS_LOG_FILE && -z $RDS_SLOW_LOG_FILE && -z $RDS_ERROR_LOG_FILE ]]; then
   # default to the us-east-1 region if missing
   if [[ -z $AWS_REGION ]]; then
       export AWS_REGION='us-east-1'
@@ -39,11 +39,10 @@ if ! [[ -z $AWS_ACCESS_KEY && -z $AWS_SECRET_KEY ]]; then
 fi
 
 # print the env vars
-env 
+env
 
 # run and monitor MySQL logs
 run
 
 # stop service
 cleanup
-
