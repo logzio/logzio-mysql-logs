@@ -99,6 +99,8 @@ function configure_rds() {
     if [[ ! -z $AWS_SECRET_KEY ]]; then
       echo "aws_secret_access_key = $AWS_SECRET_KEY" >> $AWS_CREDENTIAL_FILE
       echo "aws_access_key_id = $AWS_ACCESS_KEY" >> $AWS_CREDENTIAL_FILE
+    else
+      log "INFO" "IAM instance role is used"
     fi
 
     # if the describe log file fails, we will exit with error (and log it)
