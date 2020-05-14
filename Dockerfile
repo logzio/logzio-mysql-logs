@@ -20,8 +20,10 @@ ENV MYSQL_SLOW_LOG_FILE ""
 ENV MYSQL_LOG_FILE ""
 
 RUN wget https://raw.githubusercontent.com/logzio/public-certificates/master/COMODORSADomainValidationSecureServerCA.crt -P /root
+RUN wget https://raw.githubusercontent.com/logzio/public-certificates/master/SectigoRSADomainValidationSecureServerCA.crt -P /root
 RUN mkdir -p /etc/pki/tls/certs
 RUN cp /root/COMODORSADomainValidationSecureServerCA.crt /etc/pki/tls/certs/
+RUN cp /root/SectigoRSADomainValidationSecureServerCA.crt /etc/pki/tls/certs/
 
 RUN mkdir -p $MYSQL_LOGS_DIR
 RUN mkdir -p $LOGZIO_LOGS_DIR
