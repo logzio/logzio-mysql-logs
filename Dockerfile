@@ -1,14 +1,14 @@
-FROM ubuntu:14.04
+FROM ubuntu:18.04
 
-MAINTAINER Ofer Velich <ofer@logz.io>
+MAINTAINER Miri Bar <miri.ignatiev@logz.io>
 
 RUN apt-get update
 RUN apt-get install -y python-pip
 RUN apt-get install -y bc curl wget unzip
 RUN pip install awscli
 
-RUN curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-5.0.0-amd64.deb
-RUN dpkg -i filebeat-5.0.0-amd64.deb
+RUN curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-8.3.2-amd64.deb
+RUN dpkg -i filebeat-8.3.2-amd64.deb
 
 ENV LOGZIO_LOGS_DIR /var/log/logzio
 ENV MYSQL_LOGS_DIR /var/log/mysql
