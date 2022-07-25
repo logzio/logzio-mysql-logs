@@ -86,3 +86,7 @@ docker run -d \
 ***
 ## About Logz.io
 [Logz.io](https://logz.io) combines open source log analytics and behavioural learning intelligence to pinpoint what’s actually important
+
+## Changelog:
+- **1.0.0**:
+  - Upgrade to Filebeat 8.3.2.
