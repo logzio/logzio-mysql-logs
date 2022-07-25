@@ -27,17 +27,17 @@ kubectl create secret generic logzio-logs-secret -n kube-system \
 
 Replace the placeholders to match your specifics. (They are indicated by the double angle brackets << >>):
 
-Mandatory:
-- Replace `<<LOG-SHIPPING-TOKEN>>` with the token of the account you want to ship to.
-- Replace `<<LISTENER-HOST>>` with the host for your region. For example, `listener.logz.io` if your account is hosted on AWS US East, or `listener-nl.logz.io` if hosted on Azure West Europe.
-- Replace `<<RDS-IDENTIFIER>>` with the identifier of your RDS instance.
+- **Mandatory**:
+	- Replace `<<LOG-SHIPPING-TOKEN>>` with the token of the account you want to ship to.
+	- Replace `<<LISTENER-HOST>>` with the host for your region. For example, `listener.logz.io` if your account is hosted on AWS US East, or `listener-nl.logz.io` if hosted on Azure West Europe.
+	- Replace `<<RDS-IDENTIFIER>>` with the identifier of your RDS instance.
 
-Optional:
-- Replace `<<AWS-ACCESS-KEY>>` with your AWS access key.
-- Replace `<<AWS-SECRET-KEY>>` with your AWS secret key.
-- Replace `<<RDS-ERROR-LOG-FILE-PATH>>` with the path to the RDS error log file. Default: error/mysql-error.log.
-- Replace `<<RDS-SLOW-LOG-FILE-PATH>>` with the path to the RDS slow query log file. Default: slowquery/mysql-slowquery.log.
-- Replace `<<RDS-LOG-FILE-PATH>>` with the path to the RDS general log file. Default: general/mysql-general.log.
+- **Optional**:
+	- Replace `<<AWS-ACCESS-KEY>>` with your AWS access key.
+	- Replace `<<AWS-SECRET-KEY>>` with your AWS secret key.
+	- Replace `<<RDS-ERROR-LOG-FILE-PATH>>` with the path to the RDS error log file. Default: error/mysql-error.log.
+	- Replace `<<RDS-SLOW-LOG-FILE-PATH>>` with the path to the RDS slow query log file. Default: slowquery/mysql-slowquery.log.
+	- Replace `<<RDS-LOG-FILE-PATH>>` with the path to the RDS general log file. Default: general/mysql-general.log.
 
 ### 2. Deploy
 
