@@ -97,3 +97,4 @@ docker run -d \
 - **1.0.0**:
   - Upgrade to Filebeat 8.3.2.
   - Allow usage with instance IAM Roles.
+  - Add k8s deployment.
