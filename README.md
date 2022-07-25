@@ -83,6 +83,9 @@ docker run -d \
   logzio/mysql-logs:latest
 ```
 
+## Further deployments:
+- [Deploying to Kubernetes](https://github.com/logzio/logzio-mysql-logs/tree/master/k8s)
+
 ***
 ## Screenshots of dashboard from Logz.io
 ![alt text](https://images.contentful.com/50k90z6lk1k7/5M1Ayh1HxYuiY8soCgCCMc/fcaf1eb5fa28f98ec24a26fe96b222ac/mysql_monitor_dash.png?h=250& "Logz.io Dashboard")
