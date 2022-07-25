@@ -3,9 +3,10 @@ FROM ubuntu:18.04
 MAINTAINER Miri Bar <miri.ignatiev@logz.io>
 
 RUN apt-get update
-RUN apt-get install -y python-pip
+# RUN apt-get install -y python-pip
 RUN apt-get install -y bc curl wget unzip
-RUN pip install awscli
+# RUN pip install awscli
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && unzip awscliv2.zip && ./aws/install
 
 RUN curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-8.3.2-amd64.deb
 RUN dpkg -i filebeat-8.3.2-amd64.deb
@@ -18,6 +19,7 @@ ENV FILEBEAT_CONF /etc/filebeat/filebeat.yml
 ENV MYSQL_ERROR_LOG_FILE ""
 ENV MYSQL_SLOW_LOG_FILE ""
 ENV MYSQL_LOG_FILE ""
+ENV PULL_FROM_RDS ""
 
 RUN wget https://raw.githubusercontent.com/logzio/public-certificates/master/COMODORSADomainValidationSecureServerCA.crt -P /root
 RUN wget https://raw.githubusercontent.com/logzio/public-certificates/master/SectigoRSADomainValidationSecureServerCA.crt -P /root

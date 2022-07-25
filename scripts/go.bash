@@ -21,7 +21,7 @@ if [[ -z $LOGZIO_TOKEN ]]; then
     exit 1
 fi
 
-if ! [[ -z $AWS_ACCESS_KEY && -z $AWS_SECRET_KEY ]]; then
+if ! [[ -z $AWS_ACCESS_KEY && -z $AWS_SECRET_KEY && -z $AWS_ROLE_ARN ]]; then
   # default to the us-east-1 region if missing
   if [[ -z $AWS_REGION ]]; then
       export AWS_REGION='us-east-1'
