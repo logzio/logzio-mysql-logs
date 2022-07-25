@@ -43,25 +43,28 @@ docker run -d \
 
 ```bash
 docker run -d --name logzio-mysql-logs -e LOGZIO_TOKEN=VALUE [-e LOGZIO_LISTENER=VALUE] \
-          -e AWS_ACCESS_KEY=VALUE -e AWS_SECRET_KEY=VALUE -e RDS_IDENTIFIER=VALUE [-e AWS_REGION=VALUE] \
+          -e RDS_IDENTIFIER=VALUE [-e AWS_ACCESS_KEY=VALUE] [-e AWS_SECRET_KEY=VALUE] [-e AWS_REGION=VALUE] \
           [-e RDS_ERROR_LOG_FILE=VALUE] [-e RDS_SLOW_LOG_FILE=VALUE] [-e RDS_LOG_FILE=VALUE] \
           -v path_to_directory:/var/log/logzio -v path_to_directory:/var/log/mysql \
           logzio/mysql-logs:latest
 ```
 
-#### Mandatory<br>
-**LOGZIO_TOKEN** - Your [Logz.io App](https://app.logz.io) token, where you can find under "settings" in the web app.<br>
-**AWS_ACCESS_KEY** - A proper AMI credentials for RDS logs access (permissions for `download-db-log-file-portion` and `describe-db-log-files` are needed)<br>
-**AWS_SECRET_KEY** - A proper AMI credentials for RDS logs access (permissions for `download-db-log-file-portion` and `describe-db-log-files` are needed)<br>
-**RDS_IDENTIFIER** - The RDS identifier of the host from which you want to read logs from.<br>
+**Note:** If you're running this container on an AWS resource with the appropriate IAM Role permissions to access your RDS resource, you don't need to specify `AWS_ACCESS_KEY` and `AWS_SECRET_KEY`.
 
-#### Optional<br>
-**RDS_ERROR_LOG_FILE** - The path to the RDS error log file. Default: error/mysql-error.log <br>
-**RDS_SLOW_LOG_FILE** - The path to the RDS slow query log file. Default: slowquery/mysql-slowquery.log <br>
-**RDS_LOG_FILE** - The path to the RDS general log file. Default: general/mysql-general.log <br>
-**LOGZIO_LISTENER** - Logzio listener host name. Default: listener.logz.io <br>
-**INTERVAL_SECONDS** - RDS Sync interval. Default: 60 seconds <br>
-**AWS_REGION** - Default: us-east-1 <br>
+#### Mandatory
+
+**LOGZIO_TOKEN** - Your [Logz.io App](https://app.logz.io) token, where you can find under "settings" in the web app.
+**RDS_IDENTIFIER** - The RDS identifier of the host from which you want to read logs from.
+
+#### Optional
+**AWS_ACCESS_KEY** - A proper AMI credentials for RDS logs access (permissions for `download-db-log-file-portion` and `describe-db-log-files` are needed).
+**AWS_SECRET_KEY** - A proper AMI credentials for RDS logs access (permissions for `download-db-log-file-portion` and `describe-db-log-files` are needed).
+**RDS_ERROR_LOG_FILE** - The path to the RDS error log file. Default: error/mysql-error.log 
+**RDS_SLOW_LOG_FILE** - The path to the RDS slow query log file. Default: slowquery/mysql-slowquery.log
+**RDS_LOG_FILE** - The path to the RDS general log file. Default: general/mysql-general.log
+**LOGZIO_LISTENER** - Logzio listener host name. Default: listener.logz.io
+**INTERVAL_SECONDS** - RDS Sync interval. Default: 60 seconds
+**AWS_REGION** - Default: us-east-1
 
 ### RDS Example
 ```bash
@@ -90,3 +93,4 @@ docker run -d \
 ## Changelog:
 - **1.0.0**:
   - Upgrade to Filebeat 8.3.2.
+  - Allow usage with instance IAM Roles.

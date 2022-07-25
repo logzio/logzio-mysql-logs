@@ -19,7 +19,6 @@ ENV FILEBEAT_CONF /etc/filebeat/filebeat.yml
 ENV MYSQL_ERROR_LOG_FILE ""
 ENV MYSQL_SLOW_LOG_FILE ""
 ENV MYSQL_LOG_FILE ""
-ENV PULL_FROM_RDS ""
 
 RUN wget https://raw.githubusercontent.com/logzio/public-certificates/master/COMODORSADomainValidationSecureServerCA.crt -P /root
 RUN wget https://raw.githubusercontent.com/logzio/public-certificates/master/SectigoRSADomainValidationSecureServerCA.crt -P /root
