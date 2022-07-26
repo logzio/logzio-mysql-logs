@@ -3,7 +3,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: logzio-mysql-logs
-  namespace: kube-system
+  namespace: monitoring
   labels:
     k8s-app: logzio-mysql-logs
 ---
@@ -12,7 +12,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: logzio-mysql-logs
-  namespace: kube-system
+  namespace: monitoring
   labels:
     k8s-app: logzio-mysql-logs
 spec:
@@ -75,7 +75,7 @@ spec:
         #       key: rds-log-file
         resources:
           limits:
-            memory: 200Mi
+            memory: 1Gi
           requests:
             cpu: 100m
             memory: 100Mi

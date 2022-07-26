@@ -4,7 +4,17 @@
 
 **Important note**: this is a basic deployment. If there are advanced configurations that you wish to apply, you'll need to adjust and edit the deployment.
 
-### 1. Store your credentials:
+### 1. Create monitoring namespace:
+
+If you don't already have a **monitoring** namespace in your cluster, you can create one using the following command:
+
+```sh
+kubectl create namespace monitoring
+```
+
+We will deploy our solution under that namespace.
+
+### 2. Store your credentials:
 
 Save your Logz.io shipping credentials as a Kubernetes secret. Customize the sample command below to your specifics before running it.
 
@@ -20,7 +30,7 @@ kubectl create secret generic logzio-logs-secret -n kube-system \
 #--from-literal=rds-error-log-file='<<RDS-ERROR-LOG-FILE-PATH>>' \
 #--from-literal=rds-slow-log-file='<<RDS-SLOW-LOG-FILE-PATH>>' \
 #--from-literal=rds-log-file='<<RDS-LOG-FILE-PATH>>' \
--n kube-system
+-n monitoring
 ```
 
 **Note:** If you're deploying to EKS cluster, and it has the appropriate IAM role permissions, you don't have to specify your AWS keys.
@@ -39,7 +49,7 @@ Replace the placeholders to match your specifics. (They are indicated by the dou
 	- Replace `<<RDS-SLOW-LOG-FILE-PATH>>` with the path to the RDS slow query log file. Default: slowquery/mysql-slowquery.log.
 	- Replace `<<RDS-LOG-FILE-PATH>>` with the path to the RDS general log file. Default: general/mysql-general.log.
 
-### 2. Deploy
+### 3. Deploy
 
 Run the following command:
 
@@ -47,7 +57,7 @@ Run the following command:
 kubectl apply -f https://raw.githubusercontent.com/logzio/logzio-mysql-logs/master/k8s/logzio-deployment.yaml
 ```
 
-**Note**: If you chose to use one of the optional parameters in step 1, you'll have to edit the [deployment file](https://raw.githubusercontent.com/logzio/logzio-mysql-logs/master/k8s/logzio-deployment.yaml) - download it, and uncomment the environment variables that you wish to use.
+**Note**: If you chose to use one of the optional parameters in the previous step, you'll have to edit the [deployment file](https://raw.githubusercontent.com/logzio/logzio-mysql-logs/master/k8s/logzio-deployment.yaml) - download it, and uncomment the environment variables that you wish to use.
 
 
 ### 3. Check Logz.io for your logs
