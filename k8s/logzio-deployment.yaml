@@ -7,50 +7,9 @@ metadata:
   labels:
     k8s-app: logzio-mysql-logs
 ---
-# clusterrole
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: logzio-mysql-logs
-  labels:
-    k8s-app: logzio-mysql-logs
-rules:
-  - apiGroups:
-    - ""
-    resources:
-    - namespaces
-    - pods
-    - nodes
-    verbs:
-    - get
-    - watch
-    - list
-  - apiGroups:
-    - "apps"
-    resources:
-    - replicasets
-    verbs:
-    - get
-    - watch
-    - list
----
-# clusterrolebinding
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: logzio-mysql-logs
-subjects:
-- kind: ServiceAccount
-  name: logzio-mysql-logs
-  namespace: kube-system
-roleRef:
-  kind: ClusterRole
-  name: logzio-mysql-logs
-  apiGroup: rbac.authorization.k8s.io
----
 # daemonset
 apiVersion: apps/v1
-kind: DaemonSet
+kind: Deployment
 metadata:
   name: logzio-mysql-logs
   namespace: kube-system
@@ -114,8 +73,6 @@ spec:
         #     secretKeyRef:
         #       name: logzio-logs-secret
         #       key: rds-log-file
-        securityContext:
-          runAsUser: 0
         resources:
           limits:
             memory: 200Mi
