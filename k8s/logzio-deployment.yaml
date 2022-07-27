@@ -29,7 +29,7 @@ spec:
       hostNetwork: true
       dnsPolicy: ClusterFirstWithHostNet
       containers:
-      - name: filebeat
+      - name: logzio-mysql-logs
         image: "logzio/mysql-logs:1.0.0"
         env:
         - name: LOGZIO_TOKEN
