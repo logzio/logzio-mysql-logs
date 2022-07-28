@@ -6,17 +6,17 @@
 
 ### 1. Create monitoring namespace:
 
-If you don't already have a **monitoring** namespace in your cluster, you can create one using the following command:
+If you don't already have a **monitoring** namespace in your cluster, create one using the following command:
 
 ```sh
 kubectl create namespace monitoring
 ```
 
-We will deploy our solution under that namespace.
+The `logzio-mysql-logs` will be deployed under this namespace.
 
 ### 2. Store your credentials:
 
-Save your Logz.io shipping credentials as a Kubernetes secret. Customize the sample command below to your specifics before running it.
+Save your Logz.io shipping credentials as a Kubernetes secret using the following command:
 
 
 ```sh
@@ -37,17 +37,19 @@ kubectl create secret generic logzio-logs-secret -n kube-system \
 
 Replace the placeholders to match your specifics. (They are indicated by the double angle brackets << >>):
 
-- **Mandatory**:
-	- Replace `<<LOG-SHIPPING-TOKEN>>` with the token of the account you want to ship to.
-	- Replace `<<LISTENER-HOST>>` with the host for your region. For example, `listener.logz.io` if your account is hosted on AWS US East, or `listener-nl.logz.io` if hosted on Azure West Europe.
-	- Replace `<<RDS-IDENTIFIER>>` with the identifier of your RDS instance.
 
-- **Optional**:
-	- Replace `<<AWS-ACCESS-KEY>>` with your AWS access key.
-	- Replace `<<AWS-SECRET-KEY>>` with your AWS secret key.
-	- Replace `<<RDS-ERROR-LOG-FILE-PATH>>` with the path to the RDS error log file. Default: error/mysql-error.log.
-	- Replace `<<RDS-SLOW-LOG-FILE-PATH>>` with the path to the RDS slow query log file. Default: slowquery/mysql-slowquery.log.
-	- Replace `<<RDS-LOG-FILE-PATH>>` with the path to the RDS general log file. Default: general/mysql-general.log.
+| Parameter | Description | Required/Default |
+|---|---|---|
+| logzio-logs-shipping-token | Your Logz.io account token. Replace `<<LOG-SHIPPING-TOKEN>>` with the token of the account you want to ship to. | Required |
+| logzio-logs-listener | Listener URL. Replace `<<LISTENER-HOST>>` with the host [for your region](https://docs.logz.io/user-guide/accounts/account-region.html#available-regions). For example, `listener.logz.io` if your account is hosted on AWS US East, or `listener-nl.logz.io` if hosted on Azure West Europe. | Required. Default: `listener.logz.io` |
+| rds-identifier | The RDS identifier of the host from which you want to read logs from. | Required |
+| aws-access-key | A proper AMI credentials for RDS logs access (permissions for `download-db-log-file-portion` and `describe-db-log-files` are needed). | Optional |
+| aws-secret-key | A proper AMI credentials for RDS logs access (permissions for `download-db-log-file-portion` and `describe-db-log-files` are needed). | Optional |
+| rds-error-log-file | The path to the RDS error log file. | Optional. `error/mysql-error.log` |
+| rds-slow-log-file | The path to the RDS slow query log file. | Optional. `slowquery/mysql-slowquery.log` |
+| rds-log-file | The path to the RDS general log file. | Optional. `general/mysql-general.log` |
+
+
 
 ### 3. Deploy
 
@@ -60,7 +62,7 @@ kubectl apply -f https://raw.githubusercontent.com/logzio/logzio-mysql-logs/mast
 **Note**: If you chose to use one of the optional parameters in the previous step, you'll have to edit the [deployment file](https://raw.githubusercontent.com/logzio/logzio-mysql-logs/master/k8s/logzio-deployment.yaml) - download it, and uncomment the environment variables that you wish to use.
 
 
-### 3. Check Logz.io for your logs
+### 4. Check Logz.io for your logs
 
 Give your logs some time to get from your system to ours, and then open [Kibana](https://app.logz.io/#/dashboard/kibana).
 
