@@ -21,7 +21,7 @@ wget https://raw.githubusercontent.com/logzio/logzio-mysql-logs/master/ecs/ecs-e
 In your prefered text editor, open the JSON you downloaded in the previous step and replace the following:
 
 | Parameter | Description |
-|---|---|---|
+|---|---|
 | `<<LOG-SHIPPING-TOKEN>>` | Your Logz.io account token. |
 | `<<LISTENER-HOST>>` | Listener URL. For example, `listener.logz.io` if your account is hosted on AWS US East, or `listener-nl.logz.io` if hosted on Azure West Europe. |
 | `<<RDS-IDENTIFIER>>` | The RDS identifier of the host from which you want to read logs from. |
