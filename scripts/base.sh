@@ -96,8 +96,12 @@ function configure_rds() {
     mkdir -p /root/.aws
     echo "[default]" > $AWS_CREDENTIAL_FILE
     echo "region = $AWS_REGION" >> $AWS_CREDENTIAL_FILE
-    echo "aws_secret_access_key = $AWS_SECRET_KEY" >> $AWS_CREDENTIAL_FILE
-    echo "aws_access_key_id = $AWS_ACCESS_KEY" >> $AWS_CREDENTIAL_FILE
+    if [[ ! -z $AWS_SECRET_KEY ]]; then
+      echo "aws_secret_access_key = $AWS_SECRET_KEY" >> $AWS_CREDENTIAL_FILE
+      echo "aws_access_key_id = $AWS_ACCESS_KEY" >> $AWS_CREDENTIAL_FILE
+    else
+      log "INFO" "IAM instance role is used"
+    fi
 
     # if the describe log file fails, we will exit with error (and log it)
     execute aws rds describe-db-log-files --db-instance-identifier $RDS_IDENTIFIER

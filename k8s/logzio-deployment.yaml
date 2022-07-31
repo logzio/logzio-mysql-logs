@@ -1,0 +1,95 @@
+# serviceaccount
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: logzio-mysql-logs
+  namespace: monitoring
+  labels:
+    k8s-app: logzio-mysql-logs
+---
+# daemonset
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logzio-mysql-logs
+  namespace: monitoring
+  labels:
+    k8s-app: logzio-mysql-logs
+spec:
+  selector:
+    matchLabels:
+      k8s-app: logzio-mysql-logs
+  template:
+    metadata:
+      labels:
+        k8s-app: logzio-mysql-logs
+    spec:
+      serviceAccountName: logzio-mysql-logs
+      terminationGracePeriodSeconds: 30
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      containers:
+      - name: logzio-mysql-logs
+        image: "logzio/mysql-logs:1.0.0"
+        env:
+        - name: LOGZIO_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: logzio-logs-secret
+              key: logzio-logs-shipping-token
+        - name: LOGZIO_LISTENER
+          valueFrom:
+            secretKeyRef:
+              name: logzio-logs-secret
+              key: logzio-logs-listener
+        - name: RDS_IDENTIFIER
+          valueFrom:
+            secretKeyRef:
+              name: logzio-logs-secret
+              key: rds-identifier
+        # Uncomment the following lines if you wish to use those env vars in your deployment
+        # - name: AWS_ACCESS_KEY
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: logzio-logs-secret
+        #       key: aws-access-key
+        # - name: AWS_SECRET_KEY
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: logzio-logs-secret
+        #       key: aws-secret-key
+        # - name: RDS_ERROR_LOG_FILE
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: logzio-logs-secret
+        #       key: rds-error-log-file
+        # - name: RDS_SLOW_LOG_FILE
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: logzio-logs-secret
+        #       key: rds-slow-log-file
+        # - name: RDS_LOG_FILE
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: logzio-logs-secret
+        #       key: rds-log-file
+        resources:
+          limits:
+            memory: 1Gi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        volumeMounts:
+        - name: data
+          mountPath: /usr/share/filebeat/data
+        - name: varloglogzio
+          mountPath: /var/log/logzio
+      volumes:
+      - name: varloglogzio
+        hostPath:
+          path: /var/log/logzio
+          type: DirectoryOrCreate
+      - name: data
+        hostPath:
+          path: /var/lib/filebeat-data
+          type: DirectoryOrCreate
