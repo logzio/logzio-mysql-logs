@@ -1,6 +1,10 @@
 ## Deploy docker to ECS with EC2 to ship RDS MySQL logs:
 
-### 1. Download the task definition JSON
+### 1. Create a Log Group on Cloudwatch
+
+Create on Cloudwatch a Log Group named `/aws/ecs/logzio-mysql-logs`.
+
+### 2. Download the task definition JSON
 
 Download the task definition JSON file that matches your use case:
 
@@ -16,7 +20,7 @@ wget https://raw.githubusercontent.com/logzio/logzio-mysql-logs/master/ecs/ecs-e
 wget https://raw.githubusercontent.com/logzio/logzio-mysql-logs/master/ecs/ecs-ec2/task-definition-iam.json
 ```
 
-### 2. Configure the task
+### 3. Configure the task
 
 In your prefered text editor, open the JSON you downloaded in the previous step and replace the following:
 
@@ -33,7 +37,7 @@ In your prefered text editor, open the JSON you downloaded in the previous step 
 | `<<RDS-LOG-FILE-PATH>>` | The path to the RDS general log file. |
 | `<<YOUR-EXECUTION-ROLE-ARN>>` | The task execution role. Applies if you chose to authenticate with **IAM Role**. Make sure the role has all the appropriate policies. |
 
-### 3. Add your task definition
+### 4. Add your task definition
 
 1. In your [Amazon ECS Classic Console](https://console.aws.amazon.com/ecs/) menu, go to **Task Definitions** and click on **Create new Task Definition**.
 
@@ -43,7 +47,7 @@ In your prefered text editor, open the JSON you downloaded in the previous step 
 
 4. In the text-box, delete the existing text and paste your configured task definition JSON. Press **Save**, then press **Create**.
 
-### 4. Run the task
+### 5. Run the task
 
 1. After the task was created, click on the **Actions** button, then choose **Run Task**.
 
@@ -55,6 +59,6 @@ In your prefered text editor, open the JSON you downloaded in the previous step 
 
 5. Click on **Run Task**.
 
-### 5. Check Logz.io for your logs
+### 6. Check Logz.io for your logs
 
 Give your logs some time to get from your system to ours, and then open [Kibana](https://app.logz.io/#/dashboard/kibana).
