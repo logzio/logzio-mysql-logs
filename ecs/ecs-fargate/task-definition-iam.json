@@ -29,14 +29,6 @@
                "value": "<<AWS-REGION>>",
             },
             {
-               "name":"AWS_ACCESS_KEY",
-               "value":"<<AWS-ACCESS-KEY>>"
-            },
-            {
-               "name":"AWS_SECRET_KEY",
-               "value":"<<AWS-SECRET-KEY>>"
-            },
-            {
                "name":"RDS_ERROR_LOG_FILE",
                "value":"<<RDS-ERROR-LOG-FILE-PATH>>"
             },
@@ -82,7 +74,7 @@
    "networkMode":"awsvpc",
    "memory":"1024",
    "cpu":"512",
-   "executionRoleArn":"arn:aws:iam::<<AWS-ACCOUNT-ID>>:role/ecsTaskExecutionRole",
+   "executionRoleArn":"<<YOUR-EXECUTION-ROLE-ARN>>",
    "family":"logzio-mysql-logs",
    "taskRoleArn":"",
    "runtimePlatform":{
