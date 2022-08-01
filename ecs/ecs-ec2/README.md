@@ -29,7 +29,7 @@ In your prefered text editor, open the JSON you downloaded in the previous step 
 | `<<LOG-SHIPPING-TOKEN>>` | Your Logz.io account token. |
 | `<<LISTENER-HOST>>` | Listener URL. For example, `listener.logz.io` if your account is hosted on AWS US East, or `listener-nl.logz.io` if hosted on Azure West Europe. |
 | `<<RDS-IDENTIFIER>>` | The RDS identifier of the host from which you want to read logs from. |
-| `<<AWS_REGION>>` | Your AWS region |
+| `<<AWS_REGION>>` | Your AWS region. |
 | `<<AWS-ACCESS-KEY>>` | A proper AMI credentials for RDS logs access (permissions for `download-db-log-file-portion` and `describe-db-log-files` are needed). Applies if you chose to authenticate with **AWS Keys**. |
 | `<<AWS-SECRET-KEY>>` | A proper AMI credentials for RDS logs access (permissions for `download-db-log-file-portion` and `describe-db-log-files` are needed). Applies if you chose to authenticate with **AWS Keys**. |
 | `<<RDS-ERROR-LOG-FILE-PATH>>` | The path to the RDS error log file. |
