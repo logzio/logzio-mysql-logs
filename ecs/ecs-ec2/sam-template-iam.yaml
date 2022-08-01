@@ -1,0 +1,115 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: "This deployment creates a Task Definition for ECS with EC2, to ship RDS MySQL logs to Logz.io"
+Parameters:
+  LogzioToken:
+    Type: String
+    Description: "Your Logz.io account token"
+  LogzioListener:
+    Type: String
+    Description: "Listener URL"
+    Default: "listener.logz.io"
+    AllowedValues:
+      - "listener.logz.io"
+      - "listener-au.logz.io"
+      - "listener-ca.logz.io"
+      - "listener-eu.logz.io"
+      - "listener-nl.logz.io"
+      - "listener-uk.logz.io"
+      - "listener-wa.logz.io"
+  RdsIdentifier:
+    Type: String
+    Description: "The RDS identifier of the host from which you want to read logs from"
+  RdsErrorLogFile:
+    Type: String
+    Description: "The path to the RDS error log file"
+    Default: "error/mysql-error.log"
+  RdsSlowLogFile:
+    Type: String
+    Description: "The path to the RDS slow query log file"
+    Default: "slowquery/mysql-slowquery.log"
+  RdsLogFile:
+    Type: String
+    Description: "The path to the RDS general log file"
+    Default: "general/mysql-general.log"
+  TaskDefinitionMemoryReservation:
+    Type: Number
+    Description: "Memory reservation for your task definition"
+    Default: 512
+  IamRoleArn:
+    Type: String
+    Description: "IAM role for your task definition"
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: "Logz.io configuration"
+        Parameters:
+          - LogzioToken
+          - LogzioListener
+      - Label:
+          default: "RDS configuration"
+        Parameters:
+          - RdsIdentifier
+          - RdsErrorLogFile
+          - RdsSlowLogFile
+          - RdsLogFile
+      - Label:
+          default: "Task definition configuration"
+        Parameters:
+          - TaskDefinitionMemoryReservation
+          - IamRoleArn
+
+Resources:
+  LogGroupRdsToLogzio:
+    Type: AWS::Logs::LogGroup
+    Properties: 
+      LogGroupName: "/aws/ecs/logzio-mysql-logs"
+  TaskDefinitionRdsToLogzio:
+    Type: AWS::ECS::TaskDefinition
+    DependsOn: LogGroupRdsToLogzio
+    Properties:
+      ContainerDefinitions:
+        - Environment:
+            - Name: LOGZIO_TOKEN
+              Value: !Ref LogzioToken
+            - Name: LOGZIO_LISTENER
+              Value: !Ref LogzioListener
+            - Name: RDS_IDENTIFIER
+              Value: !Ref RdsIdentifier
+            - Name: AWS_REGION
+              Value: !Ref "AWS::Region"
+            - Name: RDS_ERROR_LOG_FILE
+              Value: !Ref RdsErrorLogFile
+            - Name: RDS_SLOW_LOG_FILE
+              Value: !Ref RdsSlowLogFile
+            - Name: RDS_LOG_FILE
+              Value: !Ref RdsLogFile
+          MountPoints:
+            - ContainerPath: "/var/log/logzio"
+              ReadOnly: false
+              SourceVolume: "varloglogzio"
+            - ContainerPath: "/var/log/mysql"
+              ReadOnly: false
+              SourceVolume: "varlogmysql"
+          MemoryReservation: !Ref TaskDefinitionMemoryReservation
+          Image: "docker.io/logzio/mysql-logs:1.0.0"
+          Essential: true
+          ReadonlyRootFilesystem: false
+          Name: "logzio-mysql-logs"
+          LogConfiguration:
+            LogDriver: "awslogs"
+            Options:
+              awslogs-group: "/aws/ecs/logzio-mysql-logs"
+              awslogs-region: !Ref "AWS::Region"
+              awslogs-stream-prefix: "aws/ecs"
+      Family: "logzio-mysql-logs"
+      RequiresCompatibilities:
+        - "EC2"
+      Volumes:
+        - Name: "varloglogzio"
+          Host:
+            SourcePath: "/var/log/logzio"
+        - Name: "varlogmysql"
+          Host:
+            SourcePath: "/var/log/mysql"
+      TaskRoleArn: !Ref IamRoleArn
