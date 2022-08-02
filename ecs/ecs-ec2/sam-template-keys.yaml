@@ -39,11 +39,8 @@ Parameters:
     Description: "A proper AMI credentials for RDS logs access (permissions for `download-db-log-file-portion` and `describe-db-log-files` are needed). Applies if you chose to authenticate with AWS Keys"
   TaskDefinitionMemoryReservation:
     Type: Number
-    Description: "Memory reservation for your task definition"
+    Description: "The soft limit (in MiB) of memory to reserve for the container."
     Default: 512
-  IamRoleArn:
-    Type: String
-    Description: "IAM role for your task definition"
 Metadata:
   AWS::CloudFormation::Interface:
     ParameterGroups:
@@ -68,7 +65,6 @@ Metadata:
           default: "Task definition configuration"
         Parameters:
           - TaskDefinitionMemoryReservation
-          - IamRoleArn
 
 Resources:
   LogGroupRdsToLogzio:

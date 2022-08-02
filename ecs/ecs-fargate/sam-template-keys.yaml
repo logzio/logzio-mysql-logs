@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: "This deployment creates a Task Definition for ECS with EC2, to ship RDS MySQL logs to Logz.io"
+Description: "This deployment creates a Task Definition for ECS with Fargate, to ship RDS MySQL logs to Logz.io"
 Parameters:
   LogzioToken:
     Type: String
@@ -31,13 +31,27 @@ Parameters:
     Type: String
     Description: "The path to the RDS general log file"
     Default: "general/mysql-general.log"
-  TaskDefinitionMemoryReservation:
+  TaskDefinitionMemoryReservationContainer:
     Type: Number
     Description: "The soft limit (in MiB) of memory to reserve for the container."
     Default: 512
+  TaskDefinitionCpu:
+    Type: String
+    Description: "The number of cpu units used by the task"
+    Default: "512"
+  TaskDefinitionMemory:
+    Type: String
+    Description: "The amount (in MiB) of memory used by the task"
+    Default: "1024"
   IamRoleArn:
     Type: String
     Description: "IAM role for your task definition"
+  AwsAccessKey:
+    Type: String
+    Description: "A proper AMI credentials for RDS logs access (permissions for `download-db-log-file-portion` and `describe-db-log-files` are needed). Applies if you chose to authenticate with AWS Keys"
+  AwsSecretKey:
+    Type: String
+    Description: "A proper AMI credentials for RDS logs access (permissions for `download-db-log-file-portion` and `describe-db-log-files` are needed). Applies if you chose to authenticate with AWS Keys"
 Metadata:
   AWS::CloudFormation::Interface:
     ParameterGroups:
@@ -56,8 +70,15 @@ Metadata:
       - Label:
           default: "Task definition configuration"
         Parameters:
-          - TaskDefinitionMemoryReservation
+          - TaskDefinitionMemoryReservationContainer
+          - TaskDefinitionCpu
+          - TaskDefinitionMemory
           - IamRoleArn
+      - Label:
+          default: "AWS configuration"
+        Parameters:
+          - AwsAccessKey
+          - AwsSecretKey
 
 Resources:
   LogGroupRdsToLogzio:
@@ -84,6 +105,10 @@ Resources:
               Value: !Ref RdsSlowLogFile
             - Name: RDS_LOG_FILE
               Value: !Ref RdsLogFile
+            - Name: AWS_ACCESS_KEY
+              Value: !Ref AwsAccessKey
+            - Name: AWS_SECRET_KEY
+              Value: !Ref AwsSecretKey
           MountPoints:
             - ContainerPath: "/var/log/logzio"
               ReadOnly: false
@@ -91,7 +116,7 @@ Resources:
             - ContainerPath: "/var/log/mysql"
               ReadOnly: false
               SourceVolume: "varlogmysql"
-          MemoryReservation: !Ref TaskDefinitionMemoryReservation
+          MemoryReservation: !Ref TaskDefinitionMemoryReservationContainer
           Image: "docker.io/logzio/mysql-logs:1.0.0"
           Essential: true
           ReadonlyRootFilesystem: false
@@ -104,12 +129,14 @@ Resources:
               awslogs-stream-prefix: "aws/ecs"
       Family: "logzio-mysql-logs"
       RequiresCompatibilities:
-        - "EC2"
+        - "FARGATE"
       Volumes:
         - Name: "varloglogzio"
-          Host:
-            SourcePath: "/var/log/logzio"
         - Name: "varlogmysql"
-          Host:
-            SourcePath: "/var/log/mysql"
+      RuntimePlatform:
+        OperatingSystemFamily: "LINUX"
+      Cpu: !Ref TaskDefinitionCpu
+      Memory: !Ref TaskDefinitionMemory
       TaskRoleArn: !Ref IamRoleArn
+      ExecutionRoleArn: !Ref IamRoleArn
+      NetworkMode: "awsvpc"
