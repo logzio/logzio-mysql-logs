@@ -26,16 +26,16 @@ wget https://raw.githubusercontent.com/logzio/logzio-mysql-logs/master/ecs/ecs-f
 
 ### 3. Configure the task
 
-In your prefered text editor, open the JSON you downloaded in the previous step and replace the following:
+In your prefered text editor, open the JSON file that you downloaded in the previous step and replace the following:
 
 | Parameter | Description |
 |---|---|
-| `<<LOG-SHIPPING-TOKEN>>` | Your Logz.io account token. |
+| `<<LOG-SHIPPING-TOKEN>>` | Your Logz.io log shipping token. |
 | `<<LISTENER-HOST>>` | Listener URL. For example, `listener.logz.io` if your account is hosted on AWS US East, or `listener-nl.logz.io` if hosted on Azure West Europe. |
-| `<<RDS-IDENTIFIER>>` | The RDS identifier of the host from which you want to read logs from. |
+| `<<RDS-IDENTIFIER>>` | The RDS identifier of the host that you want to read logs from. |
 | `<<AWS_REGION>>` | Your AWS region |
-| `<<AWS-ACCESS-KEY>>` | A proper AMI credentials for RDS logs access (permissions for `download-db-log-file-portion` and `describe-db-log-files` are needed). Applies if you chose to authenticate with **AWS Keys**. |
-| `<<AWS-SECRET-KEY>>` | A proper AMI credentials for RDS logs access (permissions for `download-db-log-file-portion` and `describe-db-log-files` are needed). Applies if you chose to authenticate with **AWS Keys**. |
+| `<<AWS-ACCESS-KEY>>` | AMI access credentials for RDS logs access (permissions for `download-db-log-file-portion` and `describe-db-log-files` are needed). Applies if you chose to authenticate with **AWS Keys**. |
+| `<<AWS-SECRET-KEY>>` | AMI secret credentials for RDS logs access (permissions for `download-db-log-file-portion` and `describe-db-log-files` are needed). Applies if you chose to authenticate with **AWS Keys**. |
 | `<<RDS-ERROR-LOG-FILE-PATH>>` | The path to the RDS error log file. |
 | `<<RDS-SLOW-LOG-FILE-PATH>>` | The path to the RDS slow query log file. |
 | `<<RDS-LOG-FILE-PATH>>` | The path to the RDS general log file. |
@@ -101,7 +101,7 @@ Keep the defaults and click **Next**.
 
 1. For **Stack name** you can either keep the default, or change the stack name.
 
-2. Fill the parameters on that page according to instructions.
+2. Fill the parameters on that page according to the instructions.
 
 3. Click **Next**.
 
