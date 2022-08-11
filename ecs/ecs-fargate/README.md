@@ -122,4 +122,5 @@ Go to your ECS cluster, and run the task you just created.
 
 ### 4. Check Logz.io for your logs
 
-Give your lo
+Give your logs some time to get from your system to ours, and then open [Kibana](https://app.logz.io/#/dashboard/kibana).
+
