@@ -105,6 +105,12 @@ docker run -d \
 - [Deploying to Kubernetes](https://github.com/logzio/logzio-mysql-logs/tree/master/k8s)
 
 ## Changelog:
+- **1.1.0**:
+  - Docker image now supprts arm64 arch.
+  - Upgrade to Filebeat 8.5.3.
+  - Filebeat configuration changes to match current Filebeat version.
+  - Upgrade base image to Ubuntu 22.04.
+  - Fix typos for yaml files.
 - **1.0.0**:
   - Upgrade to Filebeat 8.3.2.
   - Allow usage with instance IAM Roles.
