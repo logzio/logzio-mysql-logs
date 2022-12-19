@@ -33,7 +33,7 @@ ADD scripts/go.bash /root/
 ADD scripts/utils.sh /root/
 ADD scripts/base.sh /root/
 ADD files/filebeat.yaml $FILEBEAT_CONF
-ADD files/filebeat-rds.ymal /root/
+ADD files/filebeat-rds.yaml /root/
 
 WORKDIR /root
 CMD "/root/go.bash"
