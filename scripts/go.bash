@@ -30,8 +30,8 @@ if ! [[ -z $RDS_IDENTIFIER ]]; then
   fi
 
   # if present set the rds filebeat yaml config
-  if [[ -f /root/filebeat-rds.ymal ]]; then
-    cp -f /root/filebeat-rds.ymal $FILEBEAT_CONF
+  if [[ -f /root/filebeat-rds.yaml ]]; then
+    cp -f /root/filebeat-rds.yaml $FILEBEAT_CONF
   fi
 
   # configure monitoring RDS logs

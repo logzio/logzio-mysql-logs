@@ -1,6 +1,7 @@
 filebeat:
   inputs:
     - type: filestream
+      id: "mysql-error"
       paths:
         - "${MYSQL_ERROR_LOG_FILE}*"
       fields:
@@ -11,6 +12,7 @@ filebeat:
       fields_under_root: true
       ignore_older: 3h
     - type: filestream
+      id: "mysql-slow"
       paths:
        - "${MYSQL_SLOW_LOG_FILE}*"
       fields:
@@ -25,6 +27,7 @@ filebeat:
         negate: true
         match: after
     - type: filestream
+      id: "mysql-log"
       paths:
        - "${MYSQL_LOG_FILE}*"
       fields:
