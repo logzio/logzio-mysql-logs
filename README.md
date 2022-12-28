@@ -105,6 +105,9 @@ docker run -d \
 - [Deploying to Kubernetes](https://github.com/logzio/logzio-mysql-logs/tree/master/k8s)
 
 ## Changelog:
+
+- **1.2.0**:
+  - Migrate to Filebeat oss 8.5.3.
 - **1.1.0**:
   - Docker image now supprts arm64 arch.
   - Upgrade to Filebeat 8.5.3.

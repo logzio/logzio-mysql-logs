@@ -30,7 +30,7 @@ spec:
       dnsPolicy: ClusterFirstWithHostNet
       containers:
       - name: logzio-mysql-logs
-        image: "logzio/mysql-logs:1.0.0"
+        image: "logzio/mysql-logs:1.2.0"
         env:
         - name: LOGZIO_TOKEN
           valueFrom:
