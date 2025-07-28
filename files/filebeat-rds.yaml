@@ -62,7 +62,7 @@ output:
     hosts: ["${LOGZIO_LISTENER}:5015"]      
     #  The below configuration is used for Filebeat 5.0 or higher      
     ssl:
-      certificate_authorities: ['/etc/pki/tls/certs/COMODORSADomainValidationSecureServerCA.crt','/etc/pki/tls/certs/SectigoRSADomainValidationSecureServerCA.crt']
+      certificate_authorities: ['/etc/pki/tls/certs/AAACertificateServices.crt']
 logging:
   to_files: true
   files:

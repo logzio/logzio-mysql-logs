@@ -177,7 +177,8 @@ function restart_filebeat() {
     log "INFO" "LOGZIO_TOKEN: $LOGZIO_TOKEN"
     log "INFO" "LOGZIO_LISTENER: $LOGZIO_LISTENER"
 
-    execute /etc/init.d/filebeat start
+    # Run filebeat in the background
+    filebeat -e -c /etc/filebeat/filebeat.yml &
 }
 
 # ---------------------------------------- 
