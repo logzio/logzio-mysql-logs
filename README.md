@@ -105,7 +105,12 @@ docker run -d \
 - [Deploying to Kubernetes](https://github.com/logzio/logzio-mysql-logs/tree/master/k8s)
 
 ## Changelog:
-
+- **1.3.0**:
+  - Upgraded Filebeat OSS to version 9.0.4.
+  - Upgraded Ubuntu base image to 24.04.
+  - Updated Logz.io listener certificate to `AAACertificateServices.crt`.
+  - Updated the Kubernetes deployment to use the `1.3.0` image tag.
+  - Improved Filebeat execution and cleanup scripts.
 - **1.2.0**:
   - Migrate to Filebeat oss 8.5.3.
 - **1.1.0**:

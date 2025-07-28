@@ -1,7 +1,8 @@
 #!/bin/bash
 
 function cleanup() {
-	kill -9 $(</run/sqlmonitor.pid)
+	# Stop filebeat
+    kill $(pidof filebeat)
 
 	echo "Exiting..."
 }
