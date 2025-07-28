@@ -45,6 +45,10 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.dockeraction.outputs.tags }}-amd
           labels: ${{ steps.dockeraction.outputs.labels }}
+          provenance: false
+          sbom: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
 
       - name: Build and push amd64 latest
@@ -55,6 +59,10 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: logzio/mysql-logs:latest-amd
           labels: ${{ steps.dockeraction.outputs.labels }}
+          provenance: false
+          sbom: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: Build and push arm64 latest
         uses: docker/build-push-action@v6
@@ -65,6 +73,10 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: logzio/mysql-logs:latest-arm
           labels: ${{ steps.dockeraction.outputs.labels }}
+          provenance: false
+          sbom: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: Build and push arm64
         uses: docker/build-push-action@v6
@@ -75,18 +87,26 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.dockeraction.outputs.tags }}-arm
           labels: ${{ steps.dockeraction.outputs.labels }}
+          provenance: false
+          sbom: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: Create manifest version
+        if: github.event_name != 'pull_request'
         run: |
           docker manifest create ${{ steps.dockeraction.outputs.tags }} --amend ${{ steps.dockeraction.outputs.tags }}-arm --amend ${{ steps.dockeraction.outputs.tags }}-amd
 
       - name: Create manifest latest
+        if: github.event_name != 'pull_request'
         run: |
           docker manifest create logzio/mysql-logs:latest --amend logzio/mysql-logs:latest-arm --amend logzio/mysql-logs:latest-amd
 
       - name: Push manifest latest
+        if: github.event_name != 'pull_request'
         run: |
           docker manifest push logzio/mysql-logs:latest
       - name: Push manifest version
+        if: github.event_name != 'pull_request'
         run: |
           docker manifest push ${{ steps.dockeraction.outputs.tags }}
